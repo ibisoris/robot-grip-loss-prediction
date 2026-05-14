@@ -4,9 +4,29 @@ This project uses machine learning to predict when a collaborative robot may los
 
 The main work is contained in `robot_grip_loss_prediction.ipynb`.
 
+## Project Highlights
+
+- Uses real robot sensor data to study grip-loss behaviour.
+- Includes exploratory data analysis with charts and summary statistics.
+- Handles an imbalanced target, where grip-loss cases are much less common than normal grip cases.
+- Builds a complete machine learning workflow using preprocessing, SMOTE, model training, tuning, and evaluation.
+- Compares Random Forest and XGBoost models.
+- Presents results in a notebook format so the analysis can be followed step by step.
+
 ## Why This Matters
 
 In collaborative robotics, a grip-loss event can interrupt production, damage an object, or create a safety concern. A prediction model can help identify risky situations earlier, giving operators or control systems more time to respond.
+
+## Problem Statement
+
+The goal of this project is to answer the question:
+
+> Can robot sensor readings be used to predict whether a grip-loss event is likely to occur?
+
+This is treated as a binary classification problem. The model predicts one of two possible outcomes:
+
+- `0`: normal grip
+- `1`: grip loss
 
 ## Project Files
 
@@ -38,6 +58,21 @@ The notebook follows these main steps:
 11. Tunes selected model settings using cross-validation.
 12. Compares models using accuracy, precision, recall, F1-score, and AUC score.
 
+## Methodology
+
+The project uses a standard supervised machine learning approach:
+
+| Stage | What Happens |
+| --- | --- |
+| Data loading | The Excel dataset is loaded into a pandas DataFrame. |
+| Data exploration | The notebook checks the dataset shape, column names, missing values, distributions, and class balance. |
+| Preprocessing | Missing values are filled using the median, and numeric features are scaled. |
+| Class imbalance handling | SMOTE is used on the training data to help the model learn from the less common grip-loss cases. |
+| Model training | Random Forest and XGBoost classifiers are trained and compared. |
+| Feature reduction | Highly correlated features are removed in one experiment to reduce redundancy. |
+| Hyperparameter tuning | Grid search with stratified cross-validation is used to test selected model settings. |
+| Evaluation | Models are compared using accuracy, precision, recall, F1-score, and AUC score. |
+
 ## Results Summary
 
 The best model selected in the notebook was:
@@ -56,6 +91,17 @@ Its recorded test performance was:
 
 Accuracy is high because most examples are normal grip cases. For this project, the F1-score is especially useful because it balances how well the model finds grip-loss events with how often it raises false alarms.
 
+## How To Interpret The Results
+
+The model performs very well at identifying normal grip cases. Grip-loss cases are harder to predict because they appear much less often in the dataset.
+
+The best model found a useful balance between:
+
+- detecting actual grip-loss events
+- avoiding too many false grip-loss alarms
+
+In a real robotics setting, this balance would need to be chosen carefully. Missing a true grip-loss event may be more serious than raising a false warning, depending on the safety and production requirements.
+
 ## How To Run This Project
 
 You need Python installed on your computer. Python 3.10 or newer is recommended.
@@ -65,7 +111,7 @@ You need Python installed on your computer. Python 3.10 or newer is recommended.
 If using Git:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/robot-grip-loss-prediction.git
+git clone https://github.com/ibisoris/robot-grip-loss-prediction.git
 cd robot-grip-loss-prediction
 ```
 
@@ -117,9 +163,22 @@ The notebook expects the dataset file to be in the same folder as the notebook:
 dataset_02052023.xlsx
 ```
 
+This project uses a public robot sensor dataset. The dataset remains subject to the terms of its original source. It is included here for educational and reproducibility purposes.
+
 If the dataset is moved, renamed, or not included in the GitHub repository, the notebook will need to be updated with the correct file path.
 
-Before making this repository public, make sure you are allowed to share the dataset.
+## Technologies Used
+
+- Python
+- Jupyter Notebook
+- pandas
+- NumPy
+- Matplotlib
+- Seaborn
+- scikit-learn
+- imbalanced-learn
+- XGBoost
+- openpyxl
 
 ## Important Terms In Plain English
 
@@ -139,6 +198,8 @@ Before making this repository public, make sure you are allowed to share the dat
 
 **F1-score**: A balanced score that combines precision and recall.
 
+**AUC score**: A score that shows how well the model separates the two classes overall.
+
 ## Limitations
 
 This project is a notebook-based machine learning analysis, not a finished production system. The model results are based on the available dataset and should be validated further before being used in a real robot environment.
@@ -150,12 +211,16 @@ Possible improvements include:
 - Adding a small script to run predictions outside the notebook.
 - Adding more explanation of the dataset source and column meanings.
 - Comparing additional models or feature engineering approaches.
+- Adding model explainability, such as feature importance or SHAP analysis.
+- Packaging the best model so it can be loaded and reused without rerunning the full notebook.
 
-## Repository Status
+## Future Work
 
-This project is ready to be placed on GitHub once the following are checked:
+Useful next improvements would be:
 
-- The dataset is allowed to be shared publicly.
-- Notebook outputs are either intentionally kept for readability or cleared for cleaner version control.
-- The repository has been initialised with Git.
-- The files have been committed and pushed to GitHub.
+- Add the exact dataset source link.
+- Add a license file if the project is intended for reuse.
+- Save the best-performing trained model.
+- Create a simple prediction script for new robot sensor readings.
+- Add more discussion of which sensor features are most important.
+- Test the model on new data collected at a different time.
